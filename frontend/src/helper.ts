@@ -1,3 +1,3 @@
 export const server = {
-  baseURL: 'http://localhost:3000'
+  baseURL: window.location.protocol + "//" + window.location.hostname + ":3000"
 }

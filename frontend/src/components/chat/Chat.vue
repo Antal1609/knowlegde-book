@@ -25,6 +25,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { io } from "socket.io-client";
+import { server } from "@/helper";
 
 interface Message {
     name: string
@@ -38,7 +39,7 @@ export default defineComponent({
             name: "",
             text: "",
             messages: ref<Message[]>([]),
-            socket: io('http://172.31.99.6:3000/chat', {
+            socket: io(server.baseURL + '/chat', {
                 transports : ['websocket']
             })
         };
@@ -71,6 +72,6 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss">
 
 </style>
