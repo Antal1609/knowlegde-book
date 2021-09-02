@@ -7,15 +7,15 @@
                 <input id="name" type="text" v-model="name" class="form-control" placeholder="Enter name">
             </div>
             <div class="form-group">
-                <label for="text">Message</label>
-                <textarea id="text" class="form-control" v-model="text"></textarea>
+                <label for="message">Message</label>
+                <textarea id="message" class="form-control" v-model="message" placeholder="Enter message"></textarea>
             </div>
             <button class="btn btn-outline-secondary" @click="sendMessage" :disabled="!isValid">Send</button>
         </div>
         <div class="col-md-6 offset-md-3 col-sm-12 mt-4">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item" v-for="(message, key) of messages" :key="key">
-                    <span class="text-muted">{{ message.time.format('DD/MM/YY HH:mm') }}</span> {{ message.name }}: {{ message.text }}
+                    <span class="text-muted">{{ message.time.format('DD/MM/YY HH:mm') }}</span> {{ message.name }} » {{ message.message }}
                 </li>
             </ul>
         </div>
@@ -30,7 +30,7 @@ import dayjs from "dayjs";
 
 interface Message {
     name: string
-    text: string
+    message: string
     time: dayjs.Dayjs
 }
 
@@ -38,13 +38,13 @@ export default defineComponent({
     name: "Chat",
     setup() {
         const name = ref('');
-        const text = ref('');
+        const message = ref('');
 
-        const isValid = computed(() => name.value.length > 0 && text.value.length > 0);
+        const isValid = computed(() => name.value.length > 0 && message.value.length > 0);
 
         return {
             name,
-            text,
+            message,
             isValid,
             messages: ref<Message[]>([]),
             socket: io(server.baseURL + '/chat', {
@@ -63,17 +63,17 @@ export default defineComponent({
             if (this.isValid) {
                 const message = {
                     name: this.name,
-                    text: this.text,
+                    message: this.message,
                     time: dayjs()
                 };
 
-                this.messages.push(message);
+                this.messages.unshift(message);
                 this.socket.emit("chatToServer", message);
-                this.text = "";
+                this.message = "";
             }
         },
         receivedMessage(message: Message) {
-            this.messages.push(message);
+            this.messages.unshift(message);
         }
     }
 });
