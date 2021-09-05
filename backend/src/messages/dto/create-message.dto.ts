@@ -1,11 +1,22 @@
-import { IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, MinDate } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class CreateMessageDto {
   @IsString()
-  @Length(6, 64)
+  @ApiProperty()
+  @IsNotEmpty()
+  @MaxLength(64)
   name: string;
 
   @IsString()
-  @Length(1, 512)
-  text: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  @MaxLength(512)
+  message: string;
+
+  @MinDate(new Date())
+  @Type(() => Date)
+  @ApiProperty()
+  time: Date;
 }
